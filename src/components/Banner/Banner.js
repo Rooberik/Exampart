@@ -12,7 +12,7 @@ const CustomSlide = ({ Subtext, imgSrc, text, buttonLink, buttonText }) => (
   <div
     style={{
       position: "relative",
-      backgroundColor: "#F5F5F3", // Gray background color
+      backgroundColor: "#5A6170", // Gray background color
       display: "flex",
       justifyContent: "center",
       alignItems: "center", // Center vertically
@@ -38,7 +38,7 @@ const CustomSlide = ({ Subtext, imgSrc, text, buttonLink, buttonText }) => (
         style={{
           marginBottom: "25px",
           fontSize: "1.5rem", // Adjust the font size as needed
-          color: "#666", // Gray color
+          color: "Black", // Gray color
         }}
       >
         {Subtext}
@@ -61,7 +61,7 @@ const Banner = () => {
   const settings = {
     dots: true,
     infinite: true,
-    autoplay: true,
+    autoplay: false, //DENNA FÖR ANIMERING
     slidesToShow: 1,
     slidesToScroll: 1,
     adaptiveHeight: true,

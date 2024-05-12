@@ -1,0 +1,209 @@
+window.DigitalFeedback['https://digitalfeedback.euro.confirmit.com/api/digitalfeedback/loader/prod/scenario?programKey=lzpuGS&scenarioId=4333&programVersion=518'] = function (api) {
+(function(){
+    var ctx = api();
+    function getVal(x) { if (x instanceof Function) { return x(); } return x; }
+ 
+    function userfunc254(ctx, cookieExpirationDays, nthVisitor, browseTimeLimitSeconds, invite, Container, Survey) {
+
+var cookieExpiration = 60*60*24*cookieExpirationDays; // 45 days
+
+var confirmitCookieName = 'confirmit_survey_feedback_given'; // before 2022-12-10 : 'confirmit_Test_feedback_given'
+var nthVisitorKey = 'confirmit_nth_visitor_value';
+var browserTimeLimitKey = "confirmit_session_start_time";
+var is10thVisitor = Math.random() < 1/1;
+//console.log(is10thVisitor);
+
+if (alreadyHasBeenInvited()) {
+  return;
+}
+
+
+setInitialSessionValues();
+configureTriggering();
+
+function configureTriggering() {
+    var ctx = createDfContext();
+
+    var timer;
+    var check = function() {
+        timer && clearTimeout(timer);
+      if (shouldDisplayInvite()) {
+        ctx
+		.data(getWebData())
+		.show();
+          return;
+        }
+        timer = setTimeout(check, 1000);
+    };
+    check();
+}
+
+function createDfContext() {
+  
+  	const config = {
+      countInvitePresented: true,
+      countInviteAccepted: true,
+	  countInviteDeclined: true,
+	  countInviteClosed: true,
+	};
+
+    var ctx = api(config)
+    	.invite(invite)
+        .container(Container)
+        .survey(Survey);
+    ctx.events.acceptInvite.on(setInviteActionPerformedCookie);
+    ctx.events.declineInvite.on(setInviteActionPerformedCookie);
+    ctx.events.closeInvite.on(setInviteActionPerformedCookie);
+    return ctx;
+}
+
+function setInviteActionPerformedCookie() {
+    window.confirmitCookies.set(confirmitCookieName, '1', { path: '/', expiry: cookieExpiration });
+}
+
+function setInitialSessionValues(){
+    if (!sessionStorage.getItem(browserTimeLimitKey)){
+        var browseTimeLimit = new Date();
+        browseTimeLimit.setSeconds(browseTimeLimit.getSeconds() + browseTimeLimitSeconds);
+        sessionStorage.setItem(browserTimeLimitKey, browseTimeLimit);
+    }
+
+    if (!sessionStorage.getItem(nthVisitorKey)){
+        var seed = Math.random();
+        sessionStorage.setItem(nthVisitorKey, seed);
+    }
+}
+
+function shouldDisplayInvite() {
+    return !alreadyHasBeenInvited()
+            && isOnValidPage()
+  			&& isNthVisitor();
+  			//&& is10thVisitor;
+}
+
+
+function alreadyHasBeenInvited() {
+    return window.confirmitCookies.get(confirmitCookieName) == '1';
+}
+
+function isOnValidPage() {
+  return (/\/checkout\/confirmation/i.test(document.location.href)); 
+  // real value = Confirmation Old : /Confirmation/i.test(document.location.href) or  document.location.href == "https://diy.com/checkout/confirmation"
+}
+
+function isOnMantest() {
+    return (/int2/i.test(document.location.href));
+}
+
+function reachedBrowseTime() {
+    var browseTimeLimit = new Date(sessionStorage.getItem(browserTimeLimitKey));
+    return new Date() > browseTimeLimit;
+}
+
+function isNthVisitor() {
+    var seed = parseFloat(sessionStorage.getItem(nthVisitorKey));
+    return seed < 1 / nthVisitor;
+}
+
+
+/*
+document.addEventListener('click', function(event) {
+  
+  var inviteContainer = document.getElementById('wrapper-invite');
+  var isClickInside = inviteContainer.contains(event.target);
+  var surveyContainerDecline = document.getElementById("decline-invite");
+  
+  if (!isClickInside) {
+    surveyContainerDecline.click();
+  } 
+  
+});
+*/
+
+  document.addEventListener('mouseup', function (e) {
+    
+    var invite = document.getElementById('wrapper-invite');
+    var decline = document.getElementById("decline-invite");
+    
+    if(invite) {
+      
+      console.log('invite exists');
+      
+      if (!invite.contains(e.target)) {
+          decline.click();
+          console.log('declined');
+      }
+    }
+    
+  }.bind(this));
+
+// Get website data Samuel T 2022/11/22
+
+function checkTealium(step) {
+  var datalayer = window.tealiumDataLayer || [];
+  console.log('Calling checkTealium');
+  // Look at the last record first and work back to the latest record found in data layer
+  for(let i=(datalayer.length - 1); i > 0; i--) {
+    var dataLine = datalayer[i];
+    if (typeof(dataLine) == 'object' && typeof dataLine[1] != "undefined" && dataLine[1] == step) {
+      // Return the latest value found
+      return dataLine[2];
+     }
+   }
+}
+
+
+function getWebData(){
+
+	var dataList = { "Pagevisited":"", "storeId":"", "storeName":"", "authType":"", "clientId":"", "fulfillment_type":"", "prodMerchant":"", "prodType":"", "prodPrice":""};
+	if (window.localStorage["bbm-favouriteStore"]) var storeData = window.localStorage["bbm-favouriteStore"];
+    if (window.localStorage["bbm-auth"]) var userData = window.localStorage["bbm-auth"];
+  
+    // page triggered
+    if (document.location.href) dataList.Pagevisited = document.location.href;
+
+    // STORE
+	if (window.localStorage["bbm-favouriteStore"]) {
+        dataList.storeId = JSON.parse(window.localStorage["bbm-favouriteStore"]).storeId;
+        dataList.storeName = JSON.parse(window.localStorage["bbm-favouriteStore"]).storeName;
+    }
+
+    // USER
+    if (window.localStorage["bbm-auth"]) dataList.authType = JSON.parse(window.localStorage["bbm-auth"]).authType;
+    // before 2022-12-10 : dataList.clientId = JSON.parse(window.localStorage["bbm-auth"]).clientId
+
+    // TEALIUM
+  /*Samuel 28/07/2023 Depreciated
+
+    if (checkTealium('add_fulfilment_info')) {
+        dataList.fulfillment_type = checkTealium('add_fulfilment_info').fulfillmentPageDetail;
+    }*/
+  
+  	var checkOutData = checkTealium('begin_checkout');
+
+  	if (checkOutData) {
+ 	
+        dataList.prodMerchant = checkOutData.e_product_merchant_name_marketplace// checkTealium('begin_checkout').prodMerchant;
+        dataList.prodType = checkOutData.e_product_type_marketplace;
+ 
+    }
+
+  	var purchaseData = checkTealium('purchase');
+
+  	if (purchaseData) {
+      dataList.prodPrice = purchaseData.transaction_total_discount_inc_vat;
+	  dataList.fulfillment_type = purchaseData.shipping_tier;
+    }        
+
+    return dataList;
+}
+
+
+
+}
+
+
+
+    userfunc254(ctx, 45, 3, 1, "B&Q Checkout Survey Invite", "B&Q NG Test Container", "p797274048144")
+})();
+};

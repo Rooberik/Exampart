@@ -781,8 +781,7 @@ export const paginationItems = [
   {
     _id: "hp1",
     img: hp1,
-    productName:
-      "IMPRIMANTE HP JET D'ENCRE HP SMART TANK 516 COULEUR MFP 3EN1 A4 WIFI",
+    productName: "ToolIMPRIMANTE HP JET D'ENCRE HP SMART TANK 516 COULEUR MFP 3EN1 A4 WIFIIMPRIMANTE HP JET D'ENCRE HP SMART TANK 516 COULEUR MFP 3EN1 A4 WIFI",
     price: "450",
     color: "Blanc",
     badge: true,

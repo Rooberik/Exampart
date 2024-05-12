@@ -1,0 +1,122 @@
+window.DigitalFeedback['https://digitalfeedback.euro.confirmit.com/api/digitalfeedback/loader/prod/scenario?programKey=lzpuGS&scenarioId=968&programVersion=518'] = function (api) {
+(function(){
+    var ctx = api();
+    function getVal(x) { if (x instanceof Function) { return x(); } return x; }
+ 
+    function userfunc35(ctx, cookieExpirationDays, nthVisitor, prop_legacy, browseTimeLimitSeconds1, browseTimeLimitSeconds2, invite, container, survey) {
+const randomKey = "confirmit_visitor_random";
+const browserTimeLimitKey = "confirmit_session_start_time";
+const confirmitCookieName = 'confirmit_survey_feedback_given';
+const cookieExpiration = 60 * 60 * 24 * cookieExpirationDays;
+var CalledPopUp;
+
+const popuptimeRN = "confirmit_PPRN";
+
+
+if (CalledPopUp && isCheckingOut()) {
+	StopPopUp(CalledPopUp);
+//      console.log("Popup Cancelled");  
+	CalledPopUp = undefined;
+    };
+
+if (!isNthVisitor() || hasBeenInvited() || isCheckingOut())
+  return;
+
+// ST 2024-02-06 Store data in the local storage - popup delai random number
+
+if (!localStorage.getItem(popuptimeRN)) {
+  var trig_time_rng = Math.random();
+  localStorage.setItem(popuptimeRN, trig_time_rng);
+}
+
+// read data in the local storage - popup delai random number
+
+if (localStorage.getItem(popuptimeRN)) {
+  var trig_time = localStorage.getItem(popuptimeRN);
+  browseTimeLimitSeconds = trig_time <= prop_legacy / 100? browseTimeLimitSeconds1 : browseTimeLimitSeconds2;
+  //console.log("prop :", prop_legacy / 100, " + time limit", browseTimeLimitSeconds);
+}
+
+
+
+var delay = checkBrowseTime();
+
+CalledPopUp = setTimeout(function () {
+    if (!isCheckingOut()) {
+      markAsInvited();
+      resetBrowseTime();
+      // Integrate AB testing data Samuel 2023/02/06	
+	  var xpName, xpVar = undefined;
+      var ABtest = findOptimizelyTest("AB Testing");
+      if (ABtest) {
+        xpName = ABtest[1];
+		xpVar = ABtest[2]["event_label"];
+	  }
+      launchFeedback(invite, container, survey, { visitedpage: document.location.href , ExpName: xpName , ExpVariant : xpVar, PopupDelay: browseTimeLimitSeconds });
+      
+    }
+}, delay);
+
+function StopPopUp(timerId) {
+//	console.log("Clearing the trigger");
+//	console.log(timerId);
+	clearTimeout(timerId);
+}
+
+function isNthVisitor() {
+    //        return Math.random() < 1.0 / nthVisitor;
+    var random = sessionStorage.getItem(randomKey);
+    if (!random) {
+        random = Math.random();
+        sessionStorage.setItem(randomKey, random);
+    }
+    return random < 1.0 / nthVisitor;
+}
+
+function hasBeenInvited() {
+    return window.confirmitCookies.get(confirmitCookieName) == '1';
+}
+
+function isCheckingOut() {
+    return /room-visualiser/i.test(document.location.href) || /checkout/i.test(document.location.href) || /fulfilment/i.test(document.location.href) || /confirmation/i.test(document.location.href);
+
+}
+
+function markAsInvited() {
+    window.confirmitCookies.set(confirmitCookieName, '1', { path: '/', expiry: cookieExpiration });
+}
+
+function checkBrowseTime() {
+    var limit = sessionStorage.getItem(browserTimeLimitKey);
+    var now = new Date().getTime();
+    if (!limit) {
+        limit = now + browseTimeLimitSeconds * 1000;
+        sessionStorage.setItem(browserTimeLimitKey, limit);
+    }
+	//console.log("Delay from checkbrowsetime: ", browseTimeLimitSeconds);
+    return limit - now;
+}
+
+function resetBrowseTime() {
+    sessionStorage.removeItem(browserTimeLimitKey);
+}
+
+function findOptimizelyTest(name) {
+    var datalayer = window.tealiumDataLayer || [];
+    //console.log('Calling checkTealium');
+    // Look at the last record first and work back to the latest record found in data layer  
+    for(let i=(datalayer.length - 1); i > 0; i--) {
+        var dataLine = datalayer[i];
+        if (typeof (dataLine) == 'object' && typeof (dataLine[2]) != "undefined" && typeof (dataLine[2]["event_category"]) != "undefined" && dataLine[2]["event_category"] == name) {
+        // Return the latest value found      
+        return dataLine;
+        }
+    }   
+}
+}
+
+
+
+    userfunc35(ctx, 45, 3, 90, 150, 300, "B&Q Invite", "B&Q autogrow container", "p1865159387")
+})();
+};

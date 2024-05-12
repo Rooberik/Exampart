@@ -18,7 +18,7 @@ const BestSellers = () => {
           img={bestSellerOne}
           productName="Flower Base"
           price="35.00"
-          color="Blank and White"
+          color="Trash"
           badge={true}
           des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
         />
