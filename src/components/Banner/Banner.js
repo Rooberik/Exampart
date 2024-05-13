@@ -149,9 +149,11 @@ const Banner = () => {
     ],
   };
 
+  // Tar bort home page bilden - Den blåa i mitten
+/*
   const slides = [
     {
-      imgSrc: bannerImgOne,
+      // imgSrc: bannerImgThree,
       text: "Enhance Your Printing Experience",
       Subtext:
         "Explore our premium printers and consumables for exceptional results",
@@ -159,7 +161,7 @@ const Banner = () => {
       buttonText: "Shop Now",
     },
     {
-      imgSrc: bannerImgOne,
+      // imgSrc: bannerImgThree,
       text: "Quality Printing Solutions",
       Subtext:
         "Discover our wide range of printers and consumables designed for professional printing needs.",
@@ -167,7 +169,7 @@ const Banner = () => {
       buttonText: "About-us",
     },
     {
-      imgSrc: bannerImgOne,
+      // imgSrc: bannerImgThree,
       text: "Efficiency Redefined",
       Subtext:
         "Maximize productivity with our advanced printers and high-quality consumables. ",
@@ -186,6 +188,7 @@ const Banner = () => {
       </Slider>
     </div>
   );
+  */
 };
 
 export default Banner;

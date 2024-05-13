@@ -25,6 +25,7 @@ import Shop from "./pages/Shop/Shop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Background färg - Tar vi bort <div className="bg-gray-400"> kommer färgen vara vit
 const Layout = () => {
   return (
     <div>
@@ -79,5 +80,7 @@ function App() {
     </div>
   );
 }
+
+
 
 export default App;

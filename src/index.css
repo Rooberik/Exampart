@@ -12,10 +12,15 @@
     @apply hover:underline underline-offset-2 cursor-pointer text-gray-300 hover:text-white;
   }
 }
+@layer base {
+    body {
+      @apply bg-gray-100 /* Använd vilken Tailwind-färg du vill */
+    }
+  }
 
 /* ============= NavLink active Start here ============== */
 nav .active li {
-  color: rgb(224, 14, 14);
+  color: rgb(49, 39, 124);
   font-weight: 600;
   text-decoration: 1px underline black;
 }

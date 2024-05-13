@@ -1,6 +1,6 @@
 import logo from "./luxury.png";
 import logoLight from "./logoLight.png";
-import bannerImgOne from "./banner/2075409.webp";
+//import bannerImgOne from "./banner/2075409.webp";
 import bannerImgTwo from "./banner/bannerImgTwo.webp";
 import bannerImgThree from "./banner/bannerImgThree.webp";
 import saleImgOne from "./sale/saleImgOne.webp";
@@ -78,7 +78,7 @@ import espson2 from "../images/products/imprimante/espson2.webp";
 export {
   logo,
   logoLight,
-  bannerImgOne,
+  //bannerImgOne,
   bannerImgTwo,
   bannerImgThree,
   saleImgOne,
